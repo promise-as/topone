@@ -105,80 +105,82 @@
       <div class="time-item active">分时</div>
     </form>
   </div>
-  <!--收益-->
-  <div class="earn-warp">
-    <!--时间-->
-    <div class="time-container">
-      <div class="time">
-        <div class="time-main">
-          <span>时间</span>
-          <div class="main-how">
-            <!--@click.once 只能点击一次-->
-            <div class="how-item active" @click.one="timeSix">
-              {{sixMin}}s
+  <form action="#">
+    <!--收益-->
+    <div class="earn-warp">
+      <!--时间-->
+      <div class="time-container">
+        <div class="time">
+          <div class="time-main">
+            <span>时间</span>
+            <div class="main-how">
+              <!--@click.once 只能点击一次-->
+              <div class="how-item active" @click.one="timeSix">
+                {{sixMin}}s
+              </div>
+              <div class="how-item" @click.one="timeThreeHundred">
+                {{threeHundredMin}}s
+              </div>
             </div>
-            <div class="how-item" @click.one="timeThreeHundred">
-              {{threeHundredMin}}s
+          </div>
+        </div>
+        <!--手续费-->
+        <div class="procedure-fee" v-if="procedureFee">
+          手续费：<span>{{procedureFee}}</span>%
+        </div>
+      </div>
+      <!--金额-->
+      <div class="sum-container">
+        <span>金额 (ETH)</span>
+        <div class="sum-main">
+          <div class="sum-item active" @click="sum1">{{num1}}</div>
+          <div class="sum-item" @click="sum2">{{num2}}</div>
+          <div class="sum-item" @click="sum3">{{num3}}</div>
+          <div class="sum-item" @click="sum4">{{num4}}</div>
+          <div class="sum-item" @click="sum5">{{num5}}</div>
+          <div class="sum-item" @click="sum6">{{num6}}</div>
+          <div class="sum-item" @click="sum7">{{num7}}</div>
+
+          <div class="sum-item" @click="changeSum">
+            {{customSum}}
+          </div>
+
+        </div>
+      </div>
+      <!--涨 和 跌-->
+      <div class="rise-fall" v-if="sweets">
+        <div class="rise-container">
+          <input type="button" class="rise-title" value="涨"/>
+          <div class="rise-main">
+            <div class="main-top">
+              收益：<span>80%</span>
+            </div>
+            <div class="main-bottom">
+              <input type="radio" class="radio active">
+              <span>{{sweets}}糖果抵{{sweetsNum}}ETH</span>
+            </div>
+          </div>
+        </div>
+        <div class="rise-container">
+          <input type="button" class="rise-title" value="跌"/>
+          <div class="rise-main">
+            <div class="main-top">
+              收益：<span>80%</span>
+            </div>
+            <div class="main-bottom">
+              <input type="radio" class="radio">
+              <span>{{sweets}}糖果</span>
             </div>
           </div>
         </div>
       </div>
-      <!--手续费-->
-      <div class="procedure-fee" v-if="procedureFee">
-        手续费：<span>{{procedureFee}}</span>%
-      </div>
-    </div>
-    <!--金额-->
-    <div class="sum-container">
-      <span>金额 (ETH)</span>
-      <div class="sum-main">
-        <div class="sum-item active" @click="sum1">{{num1}}</div>
-        <div class="sum-item" @click="sum2">{{num2}}</div>
-        <div class="sum-item" @click="sum3">{{num3}}</div>
-        <div class="sum-item" @click="sum4">{{num4}}</div>
-        <div class="sum-item" @click="sum5">{{num5}}</div>
-        <div class="sum-item" @click="sum6">{{num6}}</div>
-        <div class="sum-item" @click="sum7">{{num7}}</div>
 
-        <div class="sum-item" @click="changeSum">
-          {{customSum}}
-        </div>
-
-      </div>
+      <!--查看订单-->
+      <a class="order" href="javascript:;" v-if="sixtyWidth < 0">
+        查看历史订单
+      </a>
     </div>
-    <!--涨 和 跌-->
-    <div class="rise-fall" v-if="sweets">
-      <div class="rise-container">
-        <input type="button" class="rise-title" value="涨"/>
-        <div class="rise-main">
-          <div class="main-top">
-            收益：<span>80%</span>
-          </div>
-          <div class="main-bottom">
-            <input type="radio" class="radio active">
-            <span>{{sweets}}糖果抵{{sweetsNum}}ETH</span>
-          </div>
-        </div>
-      </div>
-      <div class="rise-container">
-        <input type="button" class="rise-title" value="跌"/>
-        <div class="rise-main">
-          <div class="main-top">
-            收益：<span>80%</span>
-          </div>
-          <div class="main-bottom">
-            <input type="radio" class="radio">
-            <span>{{sweets}}糖果</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!--查看订单-->
-    <a class="order" href="javascript:;" v-if="sixtyWidth < 0">
-      查看历史订单
-    </a>
-  </div>
+  </form>
   <!--时间倒计时-->
   <div class="count-down">
     <!--一个订单-->
@@ -270,9 +272,26 @@
   timeTable(timeTab, progressBars)
 </script>
 
-
 <script type="text/javascript">
+
   window.onload = function () {
+    /*涨和跌按钮*/
+    var riseFall = document.querySelectorAll('.rise-container > .rise-title')
+    active(riseFall)
+    function active(activeList) {
+      for (let i = 0, len = activeList.length; i < len; i++) {
+        activeList[i].onclick = function () {
+          if(activeList[i].value === '涨'){
+            // 处理涨的逻辑
+            console.log('涨')
+          }else {
+            // 处理跌的逻辑
+            console.log('跌')
+          }
+        }
+      }
+    }
+
     // 数据意义：开盘(open)，收盘(close)，最低(lowest)，最高(highest)
     var dom = document.getElementById("container")
     var myChart = echarts.init(dom)
@@ -283,7 +302,6 @@
     var downColor = '#00da3c'
     var downBorderColor = '#008F28'
     var name
-
 
     var timeShareTab = document.querySelectorAll('.time-share-form > .time-item')
     /*if (product_id == 1) {
@@ -404,9 +422,9 @@
         // 用户下单的时间
         var timeObj = randomData(new Date() / 1000)
         var currentTime = timeObj.name
-        console.log(111, currentTime)
+        // console.log(111, currentTime)
         var ts = Math.round(new Date().getTime()/1000).toString();
-        console.log(222, ts)
+        // console.log(222, ts)
         // 时间对应的值
         var tsValue;
 
@@ -419,8 +437,7 @@
             tsValue = datas.data[len - 1].price
           }
         }
-
-        console.log(333, tsValue, datas.data)
+        // console.log(333, tsValue, datas.data)
 
         option = {
           backgroundColor: '#21202D',
@@ -462,13 +479,15 @@
 
               // 标点
               markPoint: {
+                symbol: 'circle',
+                symbolSize: 6,
                 data: [
                   {
                     name: '用户下单标点',
-                    coord: ['18:50:15', tsValue],
-                    value: tsValue, // 是0或者null就显示0
+                    coord: [currentTime, tsValue],
+                    // value: tsValue, // 是0或者null就显示0
                     itemStyle: {
-                      normal: {color: 'rgb(41,60,85)'}
+                      normal: {color: 'rgb(255, 255, 255)'},
                     }
                   },
                 ]
@@ -476,9 +495,10 @@
             }
           ]
         }
-        console.log(444, tsValue)
 
-        /*twotime = setInterval(function () {
+        // console.log(444, tsValue)
+
+        twotime = setInterval(function () {
           $.ajax({
             type: "POST",
             url: "fenshi.php",
@@ -496,7 +516,7 @@
               })
             }
           })
-        }, 1000)*/
+        }, 1000)
 
         if (option && typeof option === "object") {
           myChart.setOption(option, true)
@@ -674,29 +694,24 @@
                 },
                 // 标记点/图表标注
                 markPoint: {
-                  // 标注的文本
-                  /*label: {
-                    normal: {
-                      formatter: function (param) {
-                        // Math.round() 函数返回一个数字四舍五入后最接近的整数
-                        return param != null ? Math.round(param.value) : ''
-                      }
-                    }
-                  },*/
                   // 标记的图形
                   // 'circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow', 'none'
                   symbol: 'circle',
                   // 标记的大小，可以设置成诸如 10 这样单一的数字，
-                  // 也可以用数组分开表示宽和高，例如 [20, 10] 表示标记宽为20，高为10
-                  symbolSize: '10',
+                  symbolSize: 6,
 
                   // 标注的数据数组
-                  data: [],
-                  tooltip: {
-                    formatter: function (param) {
-                      return param.name + '<br>' + (param.data.coord || '')
-                    }
-                  }
+                  data: [
+                    {
+                      name: '用户下单标点',
+                      coord: [currentTime, tsValue],
+                      // value: tsValue, // 是0或者null就显示0
+                      itemStyle: {
+                        normal: {color: 'rgb(255, 255, 255)'},
+                        // normal: {color: 'rgb(0, 255, 0)'}
+                      }
+                    },
+                  ]
                 },
               },
 
@@ -968,30 +983,26 @@
                 }
               },
 
-              // 标点
+              // 标记点/图表标注
               markPoint: {
-                /*label: {
-                  normal: {
-                    formatter: function (param) {
-                      return param != null ? Math.round(param.value) : '';
-                    }
-                  }
-                },*/
+                // 标记的图形
+                // 'circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow', 'none'
+                symbol: 'circle',
+                // 标记的大小，可以设置成诸如 10 这样单一的数字，
+                symbolSize: 6,
+
+                // 标注的数据数组
                 data: [
                   {
-                    name: 'XX标点',
-                    coord: ['17:8:49', 0.391],
-                    value: 0.391,
+                    name: '用户下单标点',
+                    coord: [currentTime, tsValue],
+                    // value: tsValue, // 是0或者null就显示0
                     itemStyle: {
-                      normal: {color: 'rgb(255, 0, 0)'}
+                      normal: {color: 'rgb(255, 255, 255)'},
+                      // normal: {color: 'rgb(0, 255, 0)'}
                     }
-                  }
-                ],
-                tooltip: {
-                  formatter: function (param) {
-                    return param.name + '<br>' + (param.data.coord || '')
-                  }
-                }
+                  },
+                ]
               },
             }]
           }
@@ -1023,7 +1034,6 @@
         }
       })
     }
-
   }
 
 </script>
